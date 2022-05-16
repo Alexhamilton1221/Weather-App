@@ -16,6 +16,7 @@ def get_weather(city):
     temps.clear()
     dates.clear()
     try:
+        display.config(state='normal')
         display.delete(1.0,"end")
         weather_key='d1263330ca114cf770bddd71819f87a5'
         url='https://api.openweathermap.org/data/2.5/forecast'
@@ -45,6 +46,8 @@ def get_weather(city):
             output+='%20s%10s%20s%20s%20s%27s'%(dt,temp,feels_like,pressure,humidity,description)
             output+='\n'
         display.insert(1.0, output)
+        display.config(state='disabled')
+
 
     except:
         messagebox.showwarning("Unknown City", "Please enter a valid city.")
@@ -58,9 +61,6 @@ def draw_graph(output,dates,temps):
     plot.suptitle('5 Day Temperature Graph')
     #fig.canvas.set_window_title('Temperature Graph')
     fig.canvas.manager.set_window_title('Temperature Graph')
-
-
-
     plot.xlabel = 'Time'
     plot.ylabel = 'Temperature'
     plot.show()
@@ -112,6 +112,6 @@ label.place(relwidth=1,relheight=1)
 display=tk.Text(lower_frame,height=10,font=font_1)
 display.place(relwidth=1,relheight=1)
 
-#display.config(state='disabled')
+
 
 root.mainloop()
