@@ -1,2 +1,4 @@
 # Weather-App
-This program is an application that is used to get the weather forecast for the next 5 days.  The user just needs to enter any valid city, and they can get the forecast. There is also a graphing option  that will open a new window and graph that data. This program was made in Python
+This program is an application made in Python that is used to get the Weather Forecast for a 1-5 Day range, which is selected by the user. The user just needs to enter any valid city and a day range, and they can get the forecast. There is also a graphing option that will open a new window and plot the data.
+
+##Examples from the program:
