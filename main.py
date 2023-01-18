@@ -25,6 +25,7 @@ current_value = tk.IntVar()
 current_value.set(1)
 entry_text = tk.StringVar()
 entry_text.set('')
+
 def get_weather(city):
     #Empty weather data arrays
     temps.clear()
@@ -90,6 +91,7 @@ def get_weather(city):
         display.insert(1.0, output)
         display.config(state='disabled')
 
+        city_title=entry_text.get()
     except:
         messagebox.showwarning("Unknown City", "Please enter a valid city.")
         entry_text.set("")
@@ -99,7 +101,7 @@ def get_weather(city):
     #     entry_text.set('')
 
 #draw graph using weather data
-def draw_graph(output,dates,temps):
+def draw_graph(output,dates,temps,city):
     #Create Graph
     fig = plot.gcf()
     fig.set_size_inches(15.5, 10.5)
@@ -113,7 +115,7 @@ def draw_graph(output,dates,temps):
     plot.xticks(dates[::2], rotation=70)
 
     #Customize Graph
-    plot.suptitle('5 Day Temperature Graph')
+    plot.suptitle(f'{current_value.get()} Day Temperature Graph for {city.capitalize()}')
     #fig.canvas.set_window_title('Temperature Graph')
     fig.canvas.manager.set_window_title('Temperature Graph')
     plot.xlabel = 'Time'
@@ -159,13 +161,8 @@ main_image=Image.open('cloudy_sky.jpg')
 img_copy=main_image.copy()
 
 #create fonts
-font_1 = font.Font(family="Helvetica",size=10)
-font_2 = font.Font(family="Sitka Banner",size=10,weight='bold')
-font_3 = font.Font(family="Sitka Banner",size=20)
-font_4 = font.Font(family="Eccentric Std",size=20)
-font_5 = font.Font(family="Sitka Banner",size=10,weight='bold')
-font_6 = font.Font(family="Sitka Banner",size=10,weight='bold')
-font_7 = font.Font(family="Sitka Banner",size=10,weight='bold')
+font_1 = font.Font(family="Helvetica",size=15)
+font_2 = font.Font(family="Sitka Banner",size=20)
 
 #Setup background with image, bind image to resize function
 background_image=ImageTk.PhotoImage(main_image)
@@ -177,14 +174,17 @@ background_label.bind('<Configure>',resize_image)
 frame=tk.Frame(root,bg='#80c1ff',bd=5)
 frame.place(relx=0.5,rely=0.1,relwidth=0.75,relheight=0.1,anchor='n')
 
-entry=tk.Entry(frame,font=font_3,textvariable=entry_text)
+entry=tk.Entry(frame,font=font_2,textvariable=entry_text)
 entry.place(relwidth=0.65,relheight=1)
 
 
-button_1 = customtkinter.CTkButton(master=frame,text="Get Weather",text_font=font_2,command=lambda: get_weather(entry.get()))
+button_1 = customtkinter.CTkButton(master=frame,text="Get Weather",font=("Sitka Banner",20,"bold"),text_color="black",command=lambda: get_weather(entry.get()))
 button_1.place(relx=0.66,relwidth=0.15,relheight=1)
 
-button_2 = customtkinter.CTkButton(master=frame,text="Weather Graph",text_font=font_5,command=lambda:draw_graph(entry.get(),dates,temps))
+
+
+
+button_2 = customtkinter.CTkButton(master=frame,text="Weather Graph",font=("Sitka Banner",20,"bold"),text_color="black",command=lambda:draw_graph(entry.get(),dates,temps,city=entry_text.get()))
 button_2.place(relx=0.82,relwidth=0.16,relheight=1)
 
 
@@ -195,18 +195,16 @@ lower_frame.place(relx=0.5,rely=0.35,relwidth=0.75,relheight=0.6,anchor='n')
 display=tk.Text(lower_frame,font=font_1,background='#80c1ff')
 display.place(relwidth=1,relheight=0.8,rely=0.2)
 
-text_legend = customtkinter.CTkLabel(master=lower_frame,text='%1s%30s%20s%15s%18s%20s' % ('Date', 'Temp(°C)', 'Feels Like(°C)', 'Pressure(Pa)', 'Humidity(g.m⁻³)', 'Description'),
-                                      text_font=("Roboto Medium",-15))  # font name and size in px
+
+text_legend = customtkinter.CTkLabel(master=lower_frame,text='%10s%30s%25s%25s%25s%40s' % ('Date', 'Temp(°C)', 'Feels Like(°C)', 'Pressure(Pa)', 'Humidity(g.m⁻³)', 'Description'),
+                                      font=("Roboto Medium",-15,"bold"))  # font name and size in px
 text_legend.place(relwidth=1,relheight=0.1,relx=0.00001,rely=0.1)
 
 
 slider_frame=tk.Frame(root,bg='#80c1ff',bd=10)
 
-button_3 = customtkinter.CTkButton(master=slider_frame,text="Clear",text_font=font_6,command=lambda:clear_fields())
+button_3 = customtkinter.CTkButton(master=slider_frame,text="Clear",font=("Sitka Banner",20,"bold"),text_color="black",command=lambda:clear_fields())
 button_3.place(relx=0.47,rely=0.01,relwidth=0.16,relheight=1)
-
-#button_4 = customtkinter.CTkButton(master=slider_frame,text="Single Day Forecast",text_font=font_7,command=lambda:single_day())
-#button_4.place(relx=0.0001,rely=0.01,relwidth=0.2,relheight=1)
 
 slider_frame.place(relx=0.5,rely=0.2,relwidth=0.75,relheight=0.15,anchor='n')
 slider = customtkinter.CTkSlider(master=slider_frame,  from_=1,
@@ -217,15 +215,13 @@ slider = customtkinter.CTkSlider(master=slider_frame,  from_=1,
 slider.place(relwidth=0.3,relheight=0.3,relx=0.67,rely=0.5)
 
 display_range = customtkinter.CTkLabel(master=slider_frame,text=get_current_value_day_range(),
-                                      text_font=("Roboto Medium",-18))  # font name and size in px
+                                      font=("Roboto Medium",-18))  # font name and size in px
 
 display_range.place(relwidth=0.17,relheight=0.4,relx=0.74,rely=0.1)
 
 display_forecast = customtkinter.CTkLabel(master=slider_frame,text=get_current_value_day_forecast(city=entry_text.get()),
-                                      text_font=("Franklin Gothic Demi",-18))  # font name and size in px
+                                      font=("Franklin Gothic Demi",-18))  # font name and size in px
 
 display_forecast.place(relwidth=0.30,relheight=0.5,relx=0.07,rely=0.3)
-
-#slider.set(0.3)
 
 root.mainloop()
